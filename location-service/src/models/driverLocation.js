@@ -1,7 +1,7 @@
 const redis = require('../config/redis');
 
 const GEO_KEY = 'drivers:locations';
-const ALIVE_TTL_SEC = 30;p
+const ALIVE_TTL_SEC = 30;
 const NEARBY_LIMIT = 25
 
 const aliveKey = (driverId)=> `driver:${driverId}:alive`;
