@@ -26,7 +26,7 @@ async function getNearbyDrivers(lat, lng, radiusinKM) {
         'WITHDIST',
         'COUNT',
         NEARBY_LIMIT
-    );
+    )
     const drivers = [];
 
     for(const [driverId, distance] of results) {
