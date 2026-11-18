@@ -2,9 +2,9 @@ services:
   redis:
     image: redis:7-alpine
     healthcheck:
-    test: ["CMD","redis-cli","ping"]
-    interval: 5s
-    retries: 10
+      test: ["CMD","redis-cli","ping"]
+      interval: 5s
+      retries: 10
 
   gateway:
     build: ./gateway
@@ -17,8 +17,8 @@ services:
       RIDE_SERVICE_URL: http://ride-service:3001
       LOCATION_SERVICE_URL: http://location-service:3003
     depends_on:
-      ride-service
-      -location-service
+      - ride-service
+      - location-service
 
   ride-service:
     build: ./ride-service
@@ -38,9 +38,9 @@ services:
       REDIS_URL: redis://redis:6379
       RIDE_SERVICE_URL: http://ride-service:3001
       LOCATION_SERVICE_URL: http://location-service:3003
-      depends_on:
-        redis:
-          condition: service_healthy
+    depends_on:
+      redis:
+        condition: service_healthy
 
   location-service:
     build: ./location-service
