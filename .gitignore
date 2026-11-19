@@ -1,11 +1,12 @@
-
 node_modules/
 
+# Environment files
 .env
 .env.*
+dev.env
 !.env.example
 
-# logs
+# Logs
 *.log
 npm-debug.log*
 
@@ -13,13 +14,19 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
-# editor files
+# Editor files
 .idea/
 .vscode/*
 !.vscode/extensions.json
 
-# build output and coverage (for later phases)
+# Build output and coverage
 dist/
 coverage/
+
+# Documentation, journals, and helper evaluation files
 journal.md
 service-structure.md
+evaluation-guide.md
+*Agent Implementation Plan*.md
+*Service-by-Service Implementation Plan*.md
+*.postman_collection.json
