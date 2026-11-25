@@ -30,6 +30,7 @@ evaluation-guide.md
 *test-commands*.md
 *Agent Implementation Plan*.md
 *Service-by-Service Implementation Plan*.md
+Uber Clone*.md
 *.postman_collection.json
 plan.md
 service-by-service-plan.md
@@ -37,8 +38,12 @@ test-commands.md
 
 # Testing scripts
 scripts/
+*.ps1
+*.sh
 
 # Agent artifacts
 .agent/
 .agent_task/
 .agent-plan/
+.gemini/
+.antigravity/
