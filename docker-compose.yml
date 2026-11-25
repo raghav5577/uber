@@ -17,6 +17,16 @@ services:
       interval: 5s
       retries: 10
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"     # AMQP Protocol
+      - "15672:15672"   # Web Management Dashboard
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 5s
+      retries: 10
+
   gateway:
     build: ./gateway
     expose:
@@ -25,11 +35,13 @@ services:
       PORT: 3000
       NODE_ENV: ${NODE_ENV}
       JWT_SECRET: ${JWT_SECRET}
+      REDIS_URL: redis://redis:6379
       RIDE_SERVICE_URL: http://ride-service:3001
       LOCATION_SERVICE_URL: http://location-service:3003
     depends_on:
       - ride-service
       - location-service
+      - redis
 
   ride-service:
     build: ./ride-service
@@ -38,8 +50,15 @@ services:
       INTERNAL_KEY: ${INTERNAL_KEY}
       DATABASE_URL: ${DATABASE_URL}
       DB_SSL: ${DB_SSL}
+      REDIS_URL: redis://redis:6379
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
       MATCHING_SERVICE_URL: http://matching-service:3002
       LOCATION_SERVICE_URL: http://location-service:3003
+    depends_on:
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   matching-service:
     build: ./matching-service
@@ -47,10 +66,13 @@ services:
       PORT: 3002
       INTERNAL_KEY: ${INTERNAL_KEY}
       REDIS_URL: redis://redis:6379
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
       RIDE_SERVICE_URL: http://ride-service:3001
       LOCATION_SERVICE_URL: http://location-service:3003
     depends_on:
       redis:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
 
   location-service:

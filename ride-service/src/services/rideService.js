@@ -3,7 +3,7 @@ const rideModel = require('../models/rideModel');
 const driverModel = require('../models/driverModel');
 const matchingClient = require('../clients/matchingClient');
 const AppError = require('../utils/AppError');
-
+const notify = require('../utils/notify');
 // Rider requests the ride (fare-estimated -> requested)
 async function requestRide(riderId, fareId) {
     const ride = await rideModel.markRequested(fareId, riderId);
@@ -45,7 +45,7 @@ async function accept(rideId, driverId) {
     if (!ride) {
         throw new AppError(409, 'ride is not currently offered to you');
     }
-
+    notify(ride.rider_id, 'RIDE_ACCEPTED', { rideId, driverId });
     return ride;
 }
 
@@ -68,6 +68,7 @@ async function complete(rideId, driverId) {
     }
 
     await driverModel.setStatus(driverId, 'available');
+    notify(ride.rider_id, 'RIDE_COMPLETED', { rideId, driverId, fare: Number(ride.fare) });
     return ride;
 }
 
